@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Menu from "./menuApi/Menu";
+import Navbar from "./componand/Navbar/Navbar";
+import Page from "./componand/Page/Page";
+import "./App.css";
 
-function App() {
+const uniqueList = [
+  ...new Set(
+    Menu.map((curElem) => {
+      return curElem.category;
+    })
+  ),
+  "All",
+];
+
+const App = () => {
+  const [menu, setMenu] = useState(Menu);
+  const [menuList, setMenuList] = useState(uniqueList);
+  const filterItem = (category) => {
+    if (category === "All") {
+      setMenu(Menu);
+      return;
+    }
+    const updatedList = Menu.filter((curElem) => {
+      return curElem.category === category;
+    });
+
+    setMenu(updatedList);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar filterItem={filterItem} menuList={menuList} />
+      <Page menu={menu} />
+    </>
   );
-}
+};
 
 export default App;
